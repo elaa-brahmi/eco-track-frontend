@@ -1,4 +1,4 @@
-import LoginPage from "./(routes)/auth/login";
+import LoginPage from "./(routes)/auth/page";
 
 export default function Home() {
   return (
