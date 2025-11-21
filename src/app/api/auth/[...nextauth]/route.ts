@@ -7,7 +7,7 @@ import type { JWT } from "next-auth/jwt"
 type ExtendedSession = Session & { accessToken?: string; user: Session['user'] & { id?: string } }
 type ExtendedJWT = JWT & { accessToken?: string; refreshToken?: string; idToken?: string }
 
-const authOptions = {
+export const authOptions = {
   providers: [
     KeycloakProvider({
       clientId: "nextjs-app",
