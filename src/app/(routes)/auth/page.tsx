@@ -10,11 +10,9 @@ export default function LoginPage() {
           onClick={() => signIn("keycloak")}
           className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg text-xl transition"
         >
-          Se connecter avec ecoTracker
+          Connect to ecoTracker
         </button>
-        <p className="mt-6 text-gray-600">
-          Pas de compte ? Cliquez ci-dessus pour créer un compte citoyen
-        </p>
+        
       </div>
     </div>
   )
