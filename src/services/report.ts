@@ -1,6 +1,5 @@
 import { ReportData } from "../types/reportType"
 
-
 export const createReport = async (data: ReportData): Promise<any> => {
   if (!data.file) {
     throw new Error("Photo is required")
@@ -9,10 +8,9 @@ export const createReport = async (data: ReportData): Promise<any> => {
   const formData = new FormData()
   formData.append("file", data.file)
   formData.append("description", data.description)
-  formData.append("location", data.location)
+  formData.append("location", data.location) 
 
   const res = await fetch("/api/proxy/api/reports", {
-    
     method: "POST",
     body: formData,
   })

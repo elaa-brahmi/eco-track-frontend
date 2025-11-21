@@ -1,5 +1,5 @@
 export interface ReportData {
-  file: File | null
+  file: File
   description: string
   location: string
 }
