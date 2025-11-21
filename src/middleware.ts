@@ -1,30 +1,53 @@
-import { NextResponse, NextRequest } from "next/server"
-import { getToken } from "next-auth/jwt"
+import { NextResponse } from "next/server"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/src/app/api/auth/[...nextauth]/route"
 
-export async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
-  const url = new URL(request.url)
+export async function middleware(request: Request) {
+  try {
+    const session = await getServerSession(authOptions)
 
-  // Only proxy requests that go to Spring Boot
-  if (url.pathname.startsWith("/api/proxy")) {
-    const apiUrl = url.pathname.replace("/api/proxy", "")
+    const url = new URL(request.url)
 
-    const headers: Record<string, string> = {}
-    headers["Content-Type"] = request.headers.get("content-type") || "application/json"
-    if (token && (token as any).accessToken) {
-      headers["Authorization"] = `Bearer ${(token as any).accessToken}`
+    if (url.pathname.startsWith("/api/proxy")) {
+      const apiUrl = url.pathname.replace("/api/proxy", "")
+
+      // Fix 2: Clone the request to read body safely (FormData fix)
+      const requestClone = request.clone()
+      const contentType = request.headers.get("content-type") || ""
+
+      const headers: Record<string, string> = {}
+
+      // NEVER override multipart boundary — let browser do it
+      if (contentType.includes("multipart/form-data")) {
+        // Don't set Content-Type → browser sets correct boundary
+      } else {
+        headers["Content-Type"] = contentType || "application/json"
+      }
+
+      // Add token if exists
+      if (session?.accessToken) {
+        headers["Authorization"] = `Bearer ${session.accessToken}`
+      }
+
+      // Fix 3: Pass body correctly for FormData
+      const response = await fetch(`http://localhost:8080${apiUrl}`, {
+        method: request.method,
+        headers,
+        body: request.body, // This now works with FormData
+      })
+
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+      })
     }
 
-    const res = await fetch(`http://localhost:8080${apiUrl}`, {
-      method: request.method,
-      headers,
-      body: request.body,
-    })
-
-    return new Response(res.body, { status: res.status })
+    return NextResponse.next()
+  } catch (error) {
+    console.error("Middleware error:", error)
+    return new Response("Internal Server Error", { status: 500 })
   }
-
-  return NextResponse.next()  // Let normal pages load
 }
 
 export const config = {
