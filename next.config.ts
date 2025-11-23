@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // tsconfig.json
+  
   /* config options here */
 };
 

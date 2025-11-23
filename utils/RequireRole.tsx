@@ -38,7 +38,7 @@ export default function RequireRole({
   const hasRequiredRole = roles.some(role => userRoles.includes(role))
 
   if (!hasRequiredRole) {
-    return null // redirect already happened
+    return null
   }
 
   return <>{children}</>
