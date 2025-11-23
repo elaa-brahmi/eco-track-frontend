@@ -3,8 +3,10 @@ import { signIn } from "next-auth/react"
 
 export default function LoginPage() {
   const handleLogin = () => {
-    signIn("keycloak")
-    //window.location.href="/"
+    signIn("keycloak", {
+      callbackUrl: "/",        
+      redirect: true
+    })
   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50">

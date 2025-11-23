@@ -18,7 +18,7 @@ export default function ReportForm() {
   const [photo, setPhoto] = useState<File | null>(null)
   const [location, setLocation] = useState<[number, number] | null>(null)
   const [error, setError] = useState("")
-  const [markerIcon, setMarkerIcon] = useState<any>(null)
+  const [markerIcon, setMarkerIcon] = useState<L.Icon | null>(null)
 
   // ONLY RUN IN BROWSER
   useEffect(() => {
