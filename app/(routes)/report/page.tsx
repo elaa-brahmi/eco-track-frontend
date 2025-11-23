@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import "leaflet/dist/leaflet.css"
 import { createReport } from "@/services/report"
 import RequireRole from "@/utils/RequireRole"
+import { toast } from "sonner"
 
 // DYNAMIC IMPORTS — THIS IS THE ONLY SAFE WAY
 const MapContainer = dynamic(() => import("react-leaflet").then(m => m.MapContainer), { ssr: false })
@@ -88,7 +89,9 @@ export default function ReportForm() {
       setDescription("")
       setPhoto(null)
       setError("")
-      alert("Report submitted successfully!")
+      // add toast notification
+      toast.success("Report submitted successfully!")
+
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message)
       else setError(String(err) || "Failed to submit report")
@@ -164,7 +167,7 @@ export default function ReportForm() {
 
           <button
             type="submit"
-            disabled={!photo || !location}
+            disabled={!photo || !location || !description.trim()}
             className="w-full bg-[#0d1224] text-white font-bold py-4 rounded-lg text-lg hover:bg-blue-900 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             Submit Report
