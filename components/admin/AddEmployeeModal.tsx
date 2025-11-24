@@ -2,18 +2,22 @@
 
 import { useState } from "react";
 import { createEmployee } from "@/services/employees";
+import { toast } from "sonner";
+import { EmployeeData } from "@/types/EmployeeData";
 
 interface Props {
   open: boolean;
+  onAddEmployee: (employee: EmployeeData) => void;
   onClose: () => void;
-  onSuccess?: () => void; // optional: refresh list
+  onSuccess?: () => void; 
 }
 
-export default function AddEmployeeModal({ open, onClose, onSuccess }: Props) {
+export default function AddEmployeeModal({ open, onClose,onAddEmployee, onSuccess }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState("");
   const [error, setError] = useState("");
 
   if (!open) return null;
@@ -32,9 +36,11 @@ export default function AddEmployeeModal({ open, onClose, onSuccess }: Props) {
         name: name.trim(),
         email: email.trim(),
         password,
+        role: role.trim(),
       });
+      toast.success("Employee created successfully");
 
-      // SUCCESS!
+
       onSuccess?.();
       onClose();
     } catch (err: any) {
@@ -45,6 +51,7 @@ export default function AddEmployeeModal({ open, onClose, onSuccess }: Props) {
   };
 
   return (
+
     <div
       className="fixed inset-0 bg-black/50 flex justify-center items-center z-50"
       onClick={handleOverlayClick}
@@ -94,6 +101,17 @@ export default function AddEmployeeModal({ open, onClose, onSuccess }: Props) {
               placeholder="Strong password (8+ chars)"
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium">Role</label>
+            <input
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+              type="text"
+              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="technician"
+            />
+          </div>
 
           <div className="flex justify-end gap-3 pt-4">
             <button
@@ -111,7 +129,7 @@ export default function AddEmployeeModal({ open, onClose, onSuccess }: Props) {
             >
               {loading ? (
                 <>
-                  <span className="animate-spin">Loading</span> Creating...
+                   Creating...
                 </>
               ) : (
                 "Create Employee"
