@@ -20,7 +20,7 @@ export default function DashboardPage() {
 
     if (roles.includes("admin-role")) {
       console.log(session.user.roles)
-      router.replace("/dashboard")
+      router.replace("/admin/dashboard")
     } else if (roles.includes("citizen-role")) {
       console.log(session.user.roles)
 

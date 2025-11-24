@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Navigation, BarChart2, FileText, Activity, Menu, X, Grab } from 'lucide-react';
+import { Home, Navigation, BarChart2, FileText, Activity, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -12,7 +12,7 @@ export default function Sidebar() {
     { label: 'Predictions', icon: Activity, href: '/predictions' },
     { label: 'Routes', icon: Navigation, href: '/routes' },
     { label: 'Reports', icon: FileText, href: '/reports' },
-    { label: 'Analytics', icon: BarChart2, href: '/analytics' },
+    { label: 'employees', icon: BarChart2, href: '/admin/employees' },
   ];
 
   return (
