@@ -4,6 +4,7 @@ import { AlertCircle, Clock, MapPin } from "lucide-react";
 interface ReportCardProps {
   report: ReportData;
   onReportSelect: (report: ReportData) => void;
+  onSolveReport: (report: ReportData) => void;
 }
 
 const getReportTypeStyle = (type: ReportTypee) => {
@@ -33,7 +34,7 @@ const getReportStatusStyle = (status: ReportStatus) => {
 };
 
 
-export const ReportCard: React.FC<ReportCardProps> = ({ report, onReportSelect }) => {
+export const ReportCard: React.FC<ReportCardProps> = ({ report, onReportSelect ,onSolveReport}) => {
   const typeStyle = getReportTypeStyle(report.type as ReportTypee);
   const statusStyle = getReportStatusStyle(report.status as ReportStatus);
 
@@ -80,6 +81,12 @@ export const ReportCard: React.FC<ReportCardProps> = ({ report, onReportSelect }
               className="text-blue-600 hover:text-blue-700 font-semibold text-sm transition duration-150"
             >
                 View Full Details
+            </button>
+            <button 
+              onClick={() => onSolveReport(report)}
+              className="ml-4 text-green-600 hover:text-green-700 font-semibold text-sm transition duration-150"
+            >
+                Solve Report
             </button>
         </div>
       </div>

@@ -1,28 +1,22 @@
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-export function connectToWS(onContainerUpdate: (msg: any) => void) {
+export function connectToWS(handlers: Record<string, (data: any) => void>) {
   const client = new Client({
-    webSocketFactory: () => new SockJS("http://localhost:8080/ws") as any,
-    reconnectDelay: 5000,  // auto reconnect
-    debug: () => {}        // disable logs
+    webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+    reconnectDelay: 5000,
+    debug: () => {},
   });
 
   client.onConnect = () => {
-    console.log("Connected to WebSocket!");
+    console.log("WS Connected!");
 
-    client.subscribe("/topic/containers", (message) => {
-      const updatedContainer = JSON.parse(message.body);
-      console.log("Received update:", updatedContainer);
-      onContainerUpdate(updatedContainer);
+    Object.entries(handlers).forEach(([topic, callback]) => {
+      console.log("Subscribing to:", topic);
+      client.subscribe(topic, (msg) => callback(JSON.parse(msg.body)));
     });
   };
 
-  client.onStompError = (frame) => {
-    console.error("Broker error:", frame.headers["message"]);
-  };
-
   client.activate();
-
   return client;
 }

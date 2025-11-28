@@ -5,12 +5,13 @@ import { ReportData } from "@/types/reportType";
 interface FilterBarAndReportsProps {
   allReports: ReportData[];
   onReportSelect: (report: ReportData) => void;
+  onSolveReport: (report: ReportData) => void;
 }
 
 /**
  * Handles filtering logic and displays the filtered list of ReportCards.
  */
-export const FilterBarAndReports: React.FC<FilterBarAndReportsProps> = ({ allReports, onReportSelect }) => {
+export const FilterBarAndReports: React.FC<FilterBarAndReportsProps> = ({ allReports, onReportSelect,onSolveReport }) => {
   const [reportType, setReportType] = useState<string>('All Types');
   const [status, setStatus] = useState<string>('All Statuses');
   
@@ -87,7 +88,7 @@ export const FilterBarAndReports: React.FC<FilterBarAndReportsProps> = ({ allRep
       {filteredReports.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredReports.map((report) => (
-            <ReportCard key={report.id} report={report} onReportSelect={onReportSelect} />
+            <ReportCard key={report.id} report={report} onReportSelect={onReportSelect} onSolveReport={onSolveReport} />
           ))}
         </div>
       ) : (

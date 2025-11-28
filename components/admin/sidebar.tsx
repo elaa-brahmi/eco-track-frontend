@@ -18,7 +18,7 @@ export default function Sidebar() {
   return (
     <>
       {/* desktop sidebar */}
-      <aside className="hidden md:flex w-64 bg-[#0d1224] text-white min-h-screen p-4 flex-col">
+      <aside className="hidden lg:flex w-64 bg-[#0d1224] text-white min-h-screen p-4 flex-col">
         <h1 className="text-2xl font-bold mb-8 text-green-700">WasteFlow</h1>
         <nav className="space-y-2">
           {menu.map((item) => (
@@ -35,7 +35,7 @@ export default function Sidebar() {
       </aside>
 
       {/* mobile menu button */}
-      <div className="md:hidden flex items-start p-4">
+      <div className="lg:hidden flex items-start p-4">
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-[#0d1224]">
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -43,7 +43,7 @@ export default function Sidebar() {
 
       {/* mobile sidebar */}
       {isMenuOpen && (
-        <div className="md:hidden fixed top-0 left-0 w-64 h-full bg-[#0d1224] text-white p-6 shadow-lg z-50 animate-slideDown">
+        <div className="lg:hidden fixed top-0 left-0 w-64 h-full bg-[#0d1224] text-white p-6 shadow-lg z-50 animate-slideDown">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-green-700">
                 WasteFlow</h1>
