@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.2.1",
     "@tailwindcss/postcss": "^4.1.17",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.554.0",
     "next": "16.0.3",
@@ -21,7 +23,9 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-leaflet": "^5.0.0",
+    "sockjs-client": "^1.6.1",
     "sonner": "^2.0.7",
+    "stompjs": "^2.3.3",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
@@ -29,6 +33,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sockjs-client": "^1.5.4",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "tailwindcss": "^4.1.17",

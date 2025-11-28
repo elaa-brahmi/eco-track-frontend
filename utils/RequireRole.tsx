@@ -18,14 +18,14 @@ export default function RequireRole({
     if (status === "loading") return
 
     if (!session) {
-      router.replace("/auth")
+      router.replace("/unauthorized")
       return
     }
 
     const userRoles = session.user?.roles as string[] || []
     const hasRequiredRole = roles.some(role => userRoles.includes(role))
 
-    if (!hasRequiredRole) {
+    if (!hasRequiredRole || userRoles.length===0 ) {
       router.replace("/unauthorized")
     }
   }, [session, status, router, roles])

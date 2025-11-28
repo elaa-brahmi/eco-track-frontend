@@ -18,7 +18,6 @@ return (
         <div className="flex flex-col lg:flex-row lg:justify-between lg:**:items-center">
             <div className="col-span-2 lg:flex-2 p-4">
                 <InteractiveMap />
-                <BinsTable />
             </div>
             <div className="lg:flex-1 p-4">
                 <ActiveRoutes />

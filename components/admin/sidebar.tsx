@@ -8,10 +8,10 @@ export default function Sidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menu = [
-    { label: 'Monitor', icon: Home, href: '/monitor' },
-    { label: 'Predictions', icon: Activity, href: '/predictions' },
-    { label: 'Routes', icon: Navigation, href: '/routes' },
-    { label: 'Reports', icon: FileText, href: '/reports' },
+    { label: 'Dashboard', icon: Home, href: '/admin/dashboard' },
+    { label: 'Bins', icon: Activity, href: '/admin/bins' },
+    { label: 'Routes', icon: Navigation, href: '/admin/routes' },
+    { label: 'Reports', icon: FileText, href: '/admin/reports' },
     { label: 'employees', icon: BarChart2, href: '/admin/employees' },
   ];
 
