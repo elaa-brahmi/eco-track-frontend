@@ -7,9 +7,11 @@ import { useEffect, useMemo } from "react";
 export default function RequireRole({
   roles,
   children,
+  redirect = true,
 }: {
   roles: string[];
   children: React.ReactNode;
+  redirect?: boolean;
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -32,13 +34,13 @@ export default function RequireRole({
 
     // No session → anonymous allowed ONLY for /report
     if (!session) {
-      if (!isAllowedAnonymous) router.replace("/unauthorized");
+      if (!isAllowedAnonymous && redirect) router.replace("/unauthorized");
       return;
     }
 
     // Authenticated but missing role
     if (!hasRequiredRole) {
-      router.replace("/unauthorized");
+      if (redirect) router.replace("/unauthorized");
     }
   }, [session, status, router, hasRequiredRole, isAllowedAnonymous]);
 

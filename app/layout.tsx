@@ -8,7 +8,7 @@ import { AuthProvider } from "./_auth/Provider";
 import Header from "@/components/common/header";
 import { Toaster } from "sonner";
 import { NotificationProvider } from "@/context/NotificationContext";
-import NotificationBell from "@/components/admin/NotificationBell";
+import NotificationBell from "@/components/common/NotificationBell";
 import { useNotification } from "@/context/NotificationContext";
 import RequireRole from "@/utils/RequireRole";
 import { usePathname } from "next/navigation";

@@ -43,3 +43,16 @@ export const deleteEmployee = async (keycloakId: string): Promise<void> => {
   }
   return;
 }
+export const getEmployeeByKeycloakId = async (keycloakId: string): Promise<EmployeeData> => {
+  const res = await fetch(`/api/proxy/api/employees/employee/${keycloakId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error || "Failed to fetch employee");
+  }
+  return res.json();
+}
