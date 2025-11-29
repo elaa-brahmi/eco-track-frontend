@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Navigation, BarChart2, FileText, Activity, Menu, X } from 'lucide-react';
+import { Home, Navigation, FileText, Menu, X, CarIcon,Trash2Icon ,PersonStandingIcon} from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -9,10 +9,11 @@ export default function Sidebar() {
 
   const menu = [
     { label: 'Dashboard', icon: Home, href: '/admin/dashboard' },
-    { label: 'Bins', icon: Activity, href: '/admin/bins' },
+    { label: 'Bins', icon: Trash2Icon, href: '/admin/bins' },
     { label: 'Routes', icon: Navigation, href: '/admin/routes' },
     { label: 'Reports', icon: FileText, href: '/admin/reports' },
-    { label: 'employees', icon: BarChart2, href: '/admin/employees' },
+    { label: 'employees', icon: PersonStandingIcon, href: '/admin/employees' },
+    { label: 'Vehicles', icon:CarIcon , href: '/admin/vehicles' },
   ];
 
   return (
