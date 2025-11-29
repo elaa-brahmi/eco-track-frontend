@@ -37,6 +37,7 @@ const getReportStatusStyle = (status: ReportStatus) => {
 export const ReportCard: React.FC<ReportCardProps> = ({ report, onReportSelect ,onSolveReport}) => {
   const typeStyle = getReportTypeStyle(report.type as ReportTypee);
   const statusStyle = getReportStatusStyle(report.status as ReportStatus);
+  const isResolved = report.status === 'RESOLVED';
 
   return (
     <div className="bg-white rounded-lg shadow-md  hover:shadow-lg transition duration-300 flex flex-col h-full">
@@ -82,11 +83,12 @@ export const ReportCard: React.FC<ReportCardProps> = ({ report, onReportSelect ,
             >
                 View Full Details
             </button>
-            <button 
-              onClick={() => onSolveReport(report)}
-              className="ml-4 text-green-600 hover:text-green-700 font-semibold text-sm transition duration-150"
+            <button
+              onClick={() => !isResolved && onSolveReport(report)}
+              disabled={isResolved}
+              className={`ml-4 font-semibold text-sm transition duration-150 px-3 py-1 rounded ${isResolved ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'text-green-600 hover:text-green-700'}`}
             >
-                Solve Report
+                {isResolved ? 'Resolved' : 'Solve Report'}
             </button>
         </div>
       </div>
