@@ -1,7 +1,7 @@
 "use client";
-import AddBineModal from "@/components/admin/AddBineModal";
-import BinsTable from "@/components/admin/BinsTable";
-import Sidebar from "@/components/admin/sidebar";
+import AddBineModal from "@/components/admin/bins/AddBineModal";
+import BinsTable from "@/components/admin/bins/BinsTable";
+import Sidebar from "@/components/admin/dashboard/sidebar";
 import { fetchBins } from "@/services/containers";
 import { connectToWS } from "@/services/ws";
 import { BinData } from "@/types/BinData";

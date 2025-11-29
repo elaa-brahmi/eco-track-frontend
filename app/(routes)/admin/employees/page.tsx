@@ -1,10 +1,10 @@
 "use client";
-import Sidebar from "@/components/admin/sidebar";
+import Sidebar from "@/components/admin/dashboard/sidebar";
 import { useEffect, useState } from "react";
-import AddEmployeeModal from "@/components/admin/AddEmployeeModal";
+import AddEmployeeModal from "@/components/admin/employees/AddEmployeeModal";
 import { deleteEmployee, getEmployees } from "@/services/employees";
 import { EmployeeData } from "@/types/EmployeeData";
-import EmployeeList from "@/components/admin/EmployeeList";
+import EmployeeList from "@/components/admin/employees/EmployeeList";
 import RequireRole from "@/utils/RequireRole";
 import { toast } from "sonner";
 

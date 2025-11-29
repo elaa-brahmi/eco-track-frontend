@@ -1,8 +1,7 @@
-import Sidebar from '@/components/admin/sidebar';
-import StatsTabs from '@/components/admin/StatsTabs';
-import InteractiveMap from '@/components/admin/InteractiveMap';
-import ActiveRoutes from '@/components/admin/ActiveRoutes';
-import BinsTable from '@/components/admin/BinsTable';
+import Sidebar from '@/components/admin/dashboard/sidebar';
+import StatsTabs from '@/components/admin/dashboard/StatsTabs';
+import InteractiveMap from '@/components/admin/dashboard/InteractiveMap';
+import ActiveRoutes from '@/components/admin/dashboard/ActiveRoutes';
 import RequireRole from '@/utils/RequireRole';
 
 
