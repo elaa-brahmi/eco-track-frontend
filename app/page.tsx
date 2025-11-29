@@ -11,26 +11,25 @@ export default function DashboardPage() {
   useEffect(() => {
     if (status === "loading") return
 
+
     if (!session) {
-      router.replace("/auth")
+      // Unauthenticated users can access the public report page
+      router.replace("/report")
       return
     }
+
 
     const roles = (session.user?.roles as string[]) || []
 
     if (roles.includes("admin-role")) {
       console.log(session.user.roles)
-      router.replace("/dashboard")
-    } else if (roles.includes("citizen-role")) {
-      console.log(session.user.roles)
-
-      router.replace("/report")
-    } else if (roles.includes("employee-role")) {
+      router.replace("/admin/dashboard")
+    }  else if (roles.includes("employee-role")) {
       console.log(session.user.roles)
 
       router.replace("/employee")
     } else {
-      router.replace("/unauthorized")
+      router.replace("/report")
     }
   }, [session, status, router])
 

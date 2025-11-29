@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import "leaflet/dist/leaflet.css"
 import { createReport } from "@/services/report"
-import RequireRole from "@/utils/RequireRole"
 import { toast } from "sonner"
 
 // DYNAMIC IMPORTS — THIS IS THE ONLY SAFE WAY
@@ -83,7 +82,7 @@ export default function ReportForm() {
       await createReport({
         file: photo,
         description,
-        location: `${location[0]},${location[1]}`,
+        location:  [location[0], location[1]],
       })
 
       setDescription("")
@@ -108,7 +107,6 @@ export default function ReportForm() {
   }
 
   return (
-    <RequireRole roles={["citizen-role"]}>
       <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8 border mt-10 border-gray-200">
         <h2 className="text-3xl font-bold mb-8 text-[#0d1224]">Submit a Bin Report</h2>
 
@@ -174,6 +172,5 @@ export default function ReportForm() {
           </button>
         </form>
       </div>
-    </RequireRole>
   )
 }

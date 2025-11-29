@@ -1,45 +1,59 @@
-"use client"
+"use client";
 
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useSession } from "next-auth/react";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useMemo } from "react";
 
-export default function RequireRole({ 
-  roles, 
-  children 
-}: { 
-  roles: string[]
-  children: React.ReactNode 
+export default function RequireRole({
+  roles,
+  children,
+}: {
+  roles: string[];
+  children: React.ReactNode;
 }) {
-  const { data: session, status } = useSession()
-  const router = useRouter()
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const userRoles = useMemo(() => {
+    if (!session?.user?.roles) return [];
+    return Array.isArray(session.user.roles) ? session.user.roles : [];
+  }, [session]);
+
+  const hasRequiredRole = useMemo(() => {
+    return roles.some((r) => userRoles.includes(r));
+  }, [roles, userRoles]);
+
+  const isAllowedAnonymous =
+    !session && (pathname === "/report" || pathname=== "/auth") ; // public page for anonymous
 
   useEffect(() => {
-    if (status === "loading") return
+    if (status === "loading") return; // wait first login load
 
+    // No session → anonymous allowed ONLY for /report
     if (!session) {
-      router.replace("/auth")
-      return
+      if (!isAllowedAnonymous) router.replace("/unauthorized");
+      return;
     }
 
-    const userRoles = session.user?.roles as string[] || []
-    const hasRequiredRole = roles.some(role => userRoles.includes(role))
-
+    // Authenticated but missing role
     if (!hasRequiredRole) {
-      router.replace("/unauthorized")
+      router.replace("/unauthorized");
     }
-  }, [session, status, router, roles])
+  }, [session, status, router, hasRequiredRole, isAllowedAnonymous]);
 
-  if (status === "loading" || !session) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
-  }
+  //  Block rendering during session loading
+  if (status === "loading") return null;
 
-  const userRoles = session.user?.roles as string[] || []
-  const hasRequiredRole = roles.some(role => userRoles.includes(role))
+  //  Anonymous users can see /report
+  if (isAllowedAnonymous) return <>{children}</>;
 
-  if (!hasRequiredRole) {
-    return null
-  }
+  //  No session → blocked
+  if (!session) return null;
 
-  return <>{children}</>
+  //  Missing required role → block render until redirected
+  if (!hasRequiredRole) return null;
+
+  //  Authorized — allow children
+  return <>{children}</>;
 }

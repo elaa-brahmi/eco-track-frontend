@@ -3,11 +3,13 @@
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import LogoutButton from "./logoutButton"
+import RequireRole from "@/utils/RequireRole"
 
 export default function Header() {
   const { data: session, status } = useSession()
 
   return (
+    
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-3 group">
@@ -35,6 +37,7 @@ export default function Header() {
                 Login
               </button>
             </Link>
+
           )}
         </div>
       </div>
