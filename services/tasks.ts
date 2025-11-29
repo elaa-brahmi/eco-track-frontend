@@ -22,3 +22,22 @@ export const completeTask = async(taskId : string)  => {
     }
     return response.json();
 };
+export const getTasksByEmployeeId = async(employeeId : string)  => {
+    const response = await fetch(`/api/proxy/api/tasks/employees/${employeeId}`, {
+        method: 'GET',
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch tasks');
+    }
+    return response.json();
+};
+
+export const getAllTasks = async()  => {
+    const response = await fetch(`/api/proxy/api/tasks`, {
+        method: 'GET',
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch all tasks');
+    }
+    return response.json();
+};
