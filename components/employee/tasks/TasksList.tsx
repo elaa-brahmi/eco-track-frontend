@@ -65,9 +65,21 @@ export default function TasksList({ employeeId }: TasksListProps) {
     );
   }
 
+  // Sort tasks: PENDING first, then IN_PROGRESS, then COMPLETED
+  const sortedTasks = [...tasks].sort((a, b) => {
+    const statusOrder: Record<string, number> = { 
+      PENDING: 0, 
+      IN_PROGRESS: 1, 
+      COMPLETED: 2 
+    };
+    const aPriority = statusOrder[a.status] ?? 99;
+    const bPriority = statusOrder[b.status] ?? 99;
+    return aPriority - bPriority;
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
-      {tasks.map((task) => (
+      {sortedTasks.map((task) => (
         <TaskCard key={task.id} task={task} onTaskCompleted={loadTasks} />
       ))}
     </div>
