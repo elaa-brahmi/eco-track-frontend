@@ -80,7 +80,7 @@ export default function TasksList({ employeeId }: TasksListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
       {sortedTasks.map((task) => (
-        <TaskCard key={task.id} task={task} onTaskCompleted={loadTasks} />
+        <TaskCard key={task.id} task={task} onTaskCompleted={loadTasks} employeeId={employeeId} />
       ))}
     </div>
   );
