@@ -53,19 +53,62 @@ export default function NotificationBell({
             <div className="space-y-2">
               {/* Admin view */}
               <RequireRole roles={["admin-role"]} redirect={false}>
-                {notifications.map((notif, index) => (
-                  <div
-                    key={`admin-${index}`}
-                    className="p-2 border-b border-gray-100 rounded hover:bg-gray-50"
-                  >
-                    <p className="text-sm font-medium text-gray-800">
-                      Report: <span className="font-semibold">{notif.type}</span>
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {Array.isArray(notif.location) ? notif.location.join(", ") : notif.location}
-                    </p>
-                  </div>
-                ))}
+                {notifications.map((notif, index) => {
+                  const getReportTypeColor = (type: string) => {
+                    switch (type?.toLowerCase()) {
+                      case "overflow":
+                        return "bg-red-100 text-red-800";
+                      case "organic_waste_issue":
+                        return "bg-yellow-100 text-yellow-800";
+                      case "sanitation_problem":
+                        return "bg-orange-100 text-orange-800";
+                      default:
+                        return "bg-gray-100 text-gray-800";
+                    }
+                  };
+
+                  const getReportTypeIcon = (type: string) => {
+                    switch (type?.toLowerCase()) {
+                      case "overflow":
+                        return "🔴";
+                      case "organic_waste_issue":
+                        return "⚠️";
+                      case "sanitation_problem":
+                        return "🚨";
+                      default:
+                        return "📋";
+                    }
+                  };
+
+                  return (
+                    <div
+                      key={`admin-${index}`}
+                      className="p-3 border border-blue-100 rounded-lg hover:shadow-md hover:border-blue-300 bg-blue-50 transition-all"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2 flex-1">
+                          <span className="text-lg">{getReportTypeIcon(notif.type)}</span>
+                          <span className={`inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-full ${getReportTypeColor(notif.type)}`}>
+                            {notif.type?.replace(/_/g, " ").toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-sm font-semibold text-gray-800 mb-1">Report Details</p>
+                      <div className="text-xs text-gray-600 space-y-1">
+                        <div className="flex items-center gap-1">
+                          <span>📍</span>
+                          <span>{Array.isArray(notif.location) ? notif.location.join(", ") : notif.location}</span>
+                        </div>
+                        {notif.description && (
+                          <div className="flex items-start gap-1">
+                            <span>📝</span>
+                            <span className="line-clamp-2">{notif.description}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </RequireRole>
 
               {/* Employee view */}
