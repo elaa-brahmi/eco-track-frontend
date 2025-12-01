@@ -18,9 +18,7 @@ return (
             <div className="col-span-2 lg:flex-2 p-4">
                 <InteractiveMap />
             </div>
-            <div className="lg:flex-1 p-4">
-                <ActiveRoutes />
-            </div>
+            
         </div>
     </main>
 </div>
