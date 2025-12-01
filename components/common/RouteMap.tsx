@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, Suspense } from "react";
+import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamically import leaflet and react-leaflet components to avoid SSR "window is not defined" errors
