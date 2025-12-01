@@ -3,6 +3,7 @@ import StatsTabs from '@/components/admin/dashboard/StatsTabs';
 import InteractiveMap from '@/components/admin/dashboard/InteractiveMap';
 import ActiveRoutes from '@/components/admin/dashboard/ActiveRoutes';
 import RequireRole from '@/utils/RequireRole';
+import BinsMap from '@/components/admin/maps/BinsMap';
 
 
 export default function AdminDashboard() {
@@ -16,7 +17,7 @@ return (
         <StatsTabs />
         <div className="flex flex-col lg:flex-row lg:justify-between lg:**:items-center">
             <div className="col-span-2 lg:flex-2 p-4">
-                <InteractiveMap />
+                <BinsMap />
             </div>
             
         </div>

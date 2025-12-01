@@ -24,7 +24,7 @@ export default function StatsTabs() {
             const fetchedBins = await fetchBins();
             setBins(fetchedBins);
             if(fetchedBins&&fetchedBins.length>0){
-                const full = fetchedBins.filter(bin=>bin?.fillLevel || 0>=80).length;
+                const full = fetchedBins.filter(bin=>bin?.fillLevel>=80).length;
                 setFullBins(full);
             }
             const fetchedEmployees = await getEmployees();
