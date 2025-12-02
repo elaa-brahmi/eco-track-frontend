@@ -17,7 +17,7 @@ export default function Header() {
             <span className="text-white font-bold text-xl">W</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-            Waste<span className="text-green-600">Flow</span>
+            Eco<span className="text-green-600">Track</span>
           </h1>
         </Link>
 

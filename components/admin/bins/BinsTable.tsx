@@ -73,7 +73,42 @@ const BinsTable: React.FC<BinsTableProps> = ({ bins }) => {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Mobile: stacked cards */}
+      <div className="md:hidden">
+        <ul className="space-y-3">
+          {filteredBins.map((bin) => (
+            <li key={bin.id} className="bg-gray-50 p-3 rounded-lg shadow-sm">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="text-sm font-medium text-gray-800">ID: {bin.id}</div>
+                  <div className="text-xs text-gray-600">{bin.location[0].toFixed(4)}, {bin.location[1].toFixed(4)}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-gray-700">{bin.type}</div>
+                  <div className="text-xs text-gray-500">{formatDistanceToNow(new Date(bin.lastEmptied as string), { addSuffix: true })}</div>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <div className="flex-1 pr-3">
+                  <div className="w-full h-2 rounded-full bg-gray-200">
+                    <div
+                      className={`${getFillLevelColor(bin.fillLevel || 0)} h-full rounded-full transition-all duration-500`}
+                      style={{ width: `${bin.fillLevel}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="ml-3 text-sm font-medium text-gray-900">{bin.fillLevel}%</div>
+              </div>
+              <div className="mt-3">
+                <span className={`px-2 py-0.5 text-xs rounded ${getStatusTagStyle(bin.status)}`}>{bin.status}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Desktop / Tablet: table */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-white">
             <tr>
@@ -93,7 +128,7 @@ const BinsTable: React.FC<BinsTableProps> = ({ bins }) => {
                 Status
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Updated
+                last Emptied
               </th>
             </tr>
           </thead>
@@ -132,7 +167,7 @@ const BinsTable: React.FC<BinsTableProps> = ({ bins }) => {
                   </span>
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                  {formatDistanceToNow(new Date(bin.lastUpdated as string), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(bin.lastEmptied as string), { addSuffix: true })}
                 </td>
               </tr>
             ))}

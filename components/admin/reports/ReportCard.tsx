@@ -35,6 +35,7 @@ const getReportStatusStyle = (status: ReportStatus) => {
 
 
 export const ReportCard: React.FC<ReportCardProps> = ({ report, onReportSelect ,onSolveReport}) => {
+  console.log("report in card:", report);
   const typeStyle = getReportTypeStyle(report.type as ReportTypee);
   const statusStyle = getReportStatusStyle(report.status as ReportStatus);
   const isResolved = report.status === 'RESOLVED';
@@ -67,7 +68,11 @@ export const ReportCard: React.FC<ReportCardProps> = ({ report, onReportSelect ,
 
             <div className="flex items-center text-xs text-gray-500 mb-2">
                 <MapPin size={14} className="mr-1 flex-shrink-0 text-blue-500" />
-                <span>{report.location}</span>
+                <span>
+                  {Array.isArray(report.location)
+                    ? `${report.location[0].toFixed(3)}, ${report.location[1].toFixed(3)}`
+                    : report.location}
+                </span>
             </div>
             <div className="flex items-center text-xs text-gray-500">
                 <span className="font-bold mr-1">Bin ID:</span>

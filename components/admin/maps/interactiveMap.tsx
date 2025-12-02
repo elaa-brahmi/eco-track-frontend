@@ -1,17 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { fetchBins } from "@/services/containers";
 import { BinData } from "@/types/BinData";
-
-// Fix Leaflet icon path issues
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  shadowUrl: "",
-});
 
 const greenIcon = new L.Icon({
   iconUrl: "/green-bin.png",
@@ -25,29 +19,41 @@ const redIcon = new L.Icon({
 
 export default function BinsMapLeaflet() {
   const [bins, setBins] = useState<BinData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const mapRef = useRef<any>(null);
 
   useEffect(() => {
     async function load() {
-      try {
-        const data = await fetchBins();
-        console.log("Fetched bins:", data);
-        setBins(data);
-      } finally {
-        setLoading(false);
-      }
+      setBins(await fetchBins());
     }
     load();
   }, []);
 
-  if (loading) return <p>Loading map...</p>;
+  // Listen for sidebar open/close and invalidate map size
+  useEffect(() => {
+    const handleResize = () => {
+      if (mapRef.current) {
+        mapRef.current.invalidateSize();
+      }
+    };
+
+    window.addEventListener("sidebar-toggle", handleResize);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("sidebar-toggle", handleResize);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg">
+    // `isolate` creates a new stacking context so Leaflet elements can't escape
+    <div className="w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] transition-all duration-300 relative z-0 isolate">
       <MapContainer
-        center={[36.8065, 10.1815]}
+        center={[34.7400, 10.7600]}
         zoom={12}
-        style={{ height: "100%", width: "100%" }}
+        ref={mapRef}
+        className="leaflet-container z-0"
+        style={{ height: "100%", width: "100%", zIndex: 0 }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
