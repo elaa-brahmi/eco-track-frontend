@@ -10,7 +10,7 @@ export const createReport = async (data: ReportData): Promise<any> => {
   formData.append("description", data.description)
   formData.append("location", JSON.stringify(data.location).replace(/\s/g, "")) 
 
-  const res = await fetch("http://localhost:8080/api/reports", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/reports`, {
     method: "POST",
     body: formData,
   })

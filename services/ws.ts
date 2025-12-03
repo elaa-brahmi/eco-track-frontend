@@ -3,7 +3,7 @@ import SockJS from "sockjs-client";
 
 export function connectToWS(handlers: Record<string, (data: any) => void>) {
   const client = new Client({
-    webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+    webSocketFactory: () => new SockJS(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ws`),
     reconnectDelay: 5000,
     debug: () => {},
   });

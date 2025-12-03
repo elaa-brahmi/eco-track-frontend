@@ -27,7 +27,7 @@ async function proxyRequest(request: NextRequest) {
 
   const url = new URL(request.url)
   const backendPath = url.pathname.replace("/api/proxy", "")
-  const backendUrl = `http://localhost:8080${backendPath}${url.search}`
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}${backendPath}${url.search}`
 
   const headers = new Headers()
 
