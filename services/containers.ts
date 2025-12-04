@@ -30,3 +30,16 @@ export const fetchBins = async (): Promise<BinData[]> => {
   return res.json();
 
 };
+export const getLocationByContainerId = async (containerId: string): Promise<any> => {
+  const res = await fetch(`/api/proxy/api/containers/location/${containerId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error || "Failed to fetch container location");
+  }
+  return res.json();
+}

@@ -18,3 +18,10 @@ export const addVehicle = async (vehicle: Vehicle): Promise<Vehicle> => {
   if (!res.ok) throw new Error("Failed to add vehicle");
   return res.json();
 };
+export const getLocationByVehicleId = async (vehicleId: string): Promise<any> => {
+  const res = await fetch(`/api/proxy/api/vehicules/location/${vehicleId}`, {
+    method: "GET",
+  });
+  if (!res.ok) throw new Error("Failed to fetch vehicle location");
+  return res.json();
+}
