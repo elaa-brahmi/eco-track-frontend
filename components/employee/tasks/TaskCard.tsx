@@ -18,6 +18,8 @@ export default function TaskCard({ task, onTaskCompleted,employeeId }: TaskCardP
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState<string | null>(null);
   const [routePolyline, setRoutePolyline] = useState<string | null>(null);
+  const [routeContainerIds, setRouteContainerIds] = useState<string[]>([]);
+  const [routeVehicleId, setRouteVehicleId] = useState<string | null>(null);
   const [showRouteModal, setShowRouteModal] = useState(false);
   const getPriorityColor = (priority: string) => {
     switch (priority?.toUpperCase()) {
@@ -68,14 +70,19 @@ export default function TaskCard({ task, onTaskCompleted,employeeId }: TaskCardP
   const handleViewRoute = async () => {
     setRouteError(null);
     setRoutePolyline(null);
+    setRouteContainerIds([]);
+    setRouteVehicleId(null);
     setRouteLoading(true);
     try {
       const routes = await getEmployeeRoutes(employeeId);
+      console.log("Fetched routes:", routes);
       const r = routes.find((rt) => rt.taskId === task.id || rt.taskId === task.reportId || rt.routeId === task.id);
       if (!r) {
         setRouteError("No route found for this task");
       } else {
         setRoutePolyline(r.polyline);
+        setRouteContainerIds(r.containersIds || []);
+        setRouteVehicleId(r.vehicleId || null);
         setShowRouteModal(true);
       }
     } catch (err) {
@@ -161,7 +168,12 @@ export default function TaskCard({ task, onTaskCompleted,employeeId }: TaskCardP
                   ✕
                 </button>
                 <div className="h-full w-full">
-                  <RouteMap polyline={routePolyline} height="100vh" />
+                  <RouteMap 
+                    polyline={routePolyline} 
+                    height="100vh" 
+                    containerIds={routeContainerIds}
+                    vehicleId={routeVehicleId || undefined}
+                  />
                 </div>
               </div>
             </div>
