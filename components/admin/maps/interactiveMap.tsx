@@ -14,7 +14,7 @@ const greenIcon = new L.Icon({
 
 const redIcon = new L.Icon({
   iconUrl: "/red-bin.png",
-  iconSize: [60, 45],
+  iconSize: [65, 45],
 });
 
 export default function BinsMapLeaflet() {
