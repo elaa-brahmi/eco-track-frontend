@@ -19,3 +19,13 @@ export const getAllRoutes = async()  => {
     }
     return response.json();
 };
+export const getActiveRoutes = async() :Promise<RouteWithTaskDto[]> => {
+    const response = await fetch(`/api/proxy/api/route/activeRoutes`, {
+        method: 'GET',
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch active routes');
+    }
+    return response.json();
+};
+    
