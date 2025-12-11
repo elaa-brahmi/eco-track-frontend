@@ -18,7 +18,7 @@ function BellWrapper() {
   if (!ctx) return null;
   const { notifications, unread, setUnread } = ctx;
   return (
-    <div className="fixed top-20 right-6 z-50">
+    <div className="fixed top-20 right-6 z-9000">
       <NotificationBell
         notifications={notifications}
         unreadCount={unread}

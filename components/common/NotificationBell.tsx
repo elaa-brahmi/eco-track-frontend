@@ -25,10 +25,10 @@ export default function NotificationBell({
   };
 
   return (
-    <div className="relative">
+    <div className="relative  z-[4000] ">
       {/* Bell Icon */}
       <button
-        className="relative p-4 rounded-full bg-black cursor-pointer"
+        className="relative p-4 rounded-full bg-black cursor-pointer  z-[4000]"
         onClick={toggle}
       >
         <Bell className="w-7 h-7 text-white" />
@@ -43,12 +43,12 @@ export default function NotificationBell({
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 mt-3 w-80 bg-white shadow-lg rounded-xl p-3 max-h-96 overflow-y-auto z-50">
+        <div className="absolute right-0 mt-3 w-80 bg-white shadow-lg rounded-xl p-3 max-h-96 overflow-y-auto  z-[4000]">
 
           <h3 className="font-semibold text-gray-700 mb-2">Notifications</h3>
 
           {notifications.length === 0 ? (
-            <p className="text-gray-500 text-sm">No notifications</p>
+            <p className="text-gray-500 text-sm p-3">No notifications</p>
           ) : (
             <div className="space-y-2">
               {/* Admin view */}

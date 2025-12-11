@@ -44,7 +44,7 @@ export default function Sidebar() {
 
       {/* Mobile Sidebar */}
       {isMenuOpen && (
-        <div className="lg:hidden fixed top-0 left-0 w-64 h-full bg-[#0d1224] text-white p-6 shadow-lg z-50">
+        <div className="lg:hidden fixed top-0 left-0 w-64 h-full bg-[#0d1224] text-white p-6 shadow-lg  z-[4000]">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-green-700">EcoTrack</h1>
             <button onClick={() => setIsMenuOpen(false)}>
