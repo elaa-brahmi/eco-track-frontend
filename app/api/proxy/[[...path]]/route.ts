@@ -20,6 +20,7 @@ export async function PATCH(request: NextRequest) {
 
 async function proxyRequest(request: NextRequest) {
   const session = await getServerSession(authOptions)
+  console.log("Session in proxy:", session)
   if(!session) {
     return new Response("Unauthorized", { status: 401 })
   }

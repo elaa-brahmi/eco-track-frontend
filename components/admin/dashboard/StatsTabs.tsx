@@ -22,6 +22,7 @@ export default function StatsTabs() {
     useEffect(() => {
         const load = async () => {
             const fetchedBins = await fetchBins();
+            console.log('Fetched Bins:', fetchedBins);
             setBins(fetchedBins);
             if(fetchedBins&&fetchedBins.length>0){
                 const full = fetchedBins.filter(bin=>bin?.fillLevel>=75).length;
