@@ -4,9 +4,8 @@ import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import "leaflet/dist/leaflet.css"
 import { createReport } from "@/services/report"
-import { toast } from "sonner"
 
-// DYNAMIC IMPORTS — THIS IS THE ONLY SAFE WAY
+// DYNAMIC IMPORTS — SAFE FOR NEXT.JS
 const MapContainer = dynamic(() => import("react-leaflet").then(m => m.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import("react-leaflet").then(m => m.TileLayer), { ssr: false })
 const Marker = dynamic(() => import("react-leaflet").then(m => m.Marker), { ssr: false })
@@ -14,27 +13,27 @@ const Popup = dynamic(() => import("react-leaflet").then(m => m.Popup), { ssr: f
 
 export default function ReportForm() {
   const [isMounted, setIsMounted] = useState(false)
+
   const [description, setDescription] = useState("")
   const [photo, setPhoto] = useState<File | null>(null)
   const [location, setLocation] = useState<[number, number] | null>(null)
   const [error, setError] = useState("")
-  const [markerIcon, setMarkerIcon] = useState<L.Icon | null>(null)
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
+  const [markerIcon, setMarkerIcon] = useState<L.Icon | null>(null)
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   // ONLY RUN IN BROWSER
   useEffect(() => {
     setIsMounted(true)
 
-    // Fix Leaflet icon + create custom icon (dynamically import to avoid SSR/require issues)
     ;(async () => {
       const L = await import("leaflet")
-      // remove any default icon url getter and set explicit image urls
+
       try {
         Reflect.deleteProperty(L.Icon.Default.prototype, "_getIconUrl")
-      } catch {
-        // ignore if not present
-      }
+      } catch {}
 
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
@@ -42,17 +41,17 @@ export default function ReportForm() {
         shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
       })
 
-      // Create your custom pin
       const icon = new L.Icon({
         iconUrl: "/pin.png",
         iconSize: [20, 38],
         iconAnchor: [12, 41],
       })
+
       setMarkerIcon(icon)
     })()
   }, [])
 
-  // GEOLOCATION — only after mount
+  // GEOLOCATION
   useEffect(() => {
     if (!isMounted) return
 
@@ -75,27 +74,31 @@ export default function ReportForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!photo || !location) {
-      setError("Photo and location are required.")
+
+    if (!photo || !location || !description.trim()) {
+      setError("Photo, description, and location are required.")
       return
     }
 
     try {
+      setIsSubmitting(true)
+
       await createReport({
         file: photo,
         description,
-        location:  [location[0], location[1]],
+        location: [location[0], location[1]],
       })
 
       setDescription("")
       setPhoto(null)
       setError("")
-      // add toast notification
       setShowSuccessModal(true)
 
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message)
-      else setError(String(err) || "Failed to submit report")
+      else setError("Failed to submit report")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -109,105 +112,165 @@ export default function ReportForm() {
   }
 
   return (
+    <>
       <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8 border mt-10 border-gray-200">
-        <h2 className="text-3xl font-bold mb-8 text-[#0d1224]">Submit a Bin Report</h2>
+        <h2 className="text-3xl font-bold mb-8 text-[#0d1224]">
+          Submit a Bin Report
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* DESCRIPTION */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">Description</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">
+              Description
+            </label>
             <textarea
               required
               value={description}
+              disabled={isSubmitting}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-4 bg-gray-50 focus:ring-2 focus:ring-black focus:outline-none"
+              className="w-full border border-gray-300 rounded-lg p-4 bg-gray-50 focus:ring-2 focus:ring-black focus:outline-none disabled:opacity-60"
               rows={4}
               placeholder="Describe the issue with the garbage bin..."
             />
           </div>
 
+          {/* PHOTO */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">Photo</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">
+              Photo
+            </label>
             <input
               type="file"
               accept="image/*"
               required
+              disabled={isSubmitting}
               onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-              className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-black file:text-white"
+              className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-black file:text-white disabled:opacity-60"
             />
           </div>
 
+          {/* LOCATION */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-3">Your Location</label>
+            <label className="block text-lg font-medium text-gray-700 mb-3">
+              Your Location
+            </label>
 
             {location ? (
               <div className="h-80 w-full rounded-lg overflow-hidden border border-gray-300 shadow-md">
                 <MapContainer center={location} zoom={16} style={{ height: "100%", width: "100%" }}>
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  {markerIcon && <Marker position={location} icon={markerIcon}>
-                    <Popup>You are here</Popup>
-                  </Marker>}
+                  {markerIcon && (
+                    <Marker position={location} icon={markerIcon}>
+                      <Popup>You are here</Popup>
+                    </Marker>
+                  )}
                 </MapContainer>
               </div>
             ) : (
               <div className="h-80 bg-gray-100 rounded-lg flex items-center justify-center border">
-                <p className="text-gray-600">{error || "Detecting your location..."}</p>
+                <p className="text-gray-600">
+                  {error || "Detecting your location..."}
+                </p>
               </div>
             )}
 
             {location && (
               <p className="mt-3 text-sm text-gray-700">
-                Coordinates: <span className="font-mono font-bold text-blue-600">
+                Coordinates:{" "}
+                <span className="font-mono font-bold text-blue-600">
                   [{location[0].toFixed(6)}, {location[1].toFixed(6)}]
                 </span>
               </p>
             )}
           </div>
 
-          {error && <p className="text-red-600 font-semibold bg-red-50 p-4 rounded-lg">{error}</p>}
+          {error && (
+            <p className="text-red-600 font-semibold bg-red-50 p-4 rounded-lg">
+              {error}
+            </p>
+          )}
 
+          {/* SUBMIT BUTTON */}
           <button
             type="submit"
-            disabled={!photo || !location || !description.trim()}
-            className="w-full bg-[#0d1224] text-white font-bold py-4 rounded-lg text-lg hover:bg-blue-900 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+            disabled={
+              isSubmitting ||
+              !photo ||
+              !location ||
+              !description.trim()
+            }
+            className="
+              w-full flex items-center justify-center gap-3
+              bg-[#0d1224] text-white font-bold py-4 rounded-lg text-lg
+              hover:bg-blue-900 transition
+              disabled:bg-gray-400 disabled:cursor-not-allowed
+            "
           >
-            Submit Report
+            {isSubmitting ? (
+              <>
+                <svg
+                  className="h-5 w-5 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  />
+                </svg>
+                Submitting...
+              </>
+            ) : (
+              "Submit Report"
+            )}
           </button>
         </form>
-        {showSuccessModal && (
-  <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center animate-in fade-in zoom-in">
-
-      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
-        <svg
-          className="h-8 w-8 text-green-600"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
       </div>
 
-      <h3 className="text-2xl font-bold text-[#0d1224] mb-2">
-        Thank you for caring about your city 🌱
-      </h3>
+      {/* SUCCESS MODAL */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center animate-in fade-in zoom-in">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+              <svg
+                className="h-8 w-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
 
-      <p className="text-gray-600 mb-6">
-        Your report has been successfully submitted.  
-        Our team will review it and take action as soon as possible.
-      </p>
+            <h3 className="text-2xl font-bold text-[#0d1224] mb-2">
+              Thank you for caring about your city 🌱
+            </h3>
 
-      <button
-        onClick={() => setShowSuccessModal(false)}
-        className="w-full bg-[#0d1224] text-white font-semibold py-3 rounded-lg hover:bg-blue-900 transition"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
+            <p className="text-gray-600 mb-6">
+              Your report has been successfully submitted.  
+              Our team will review it and take action as soon as possible.
+            </p>
 
-      </div>
+            <button
+              onClick={() => setShowSuccessModal(false)}
+              className="w-full bg-[#0d1224] text-white font-semibold py-3 rounded-lg hover:bg-blue-900 transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
