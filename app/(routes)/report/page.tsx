@@ -19,6 +19,8 @@ export default function ReportForm() {
   const [location, setLocation] = useState<[number, number] | null>(null)
   const [error, setError] = useState("")
   const [markerIcon, setMarkerIcon] = useState<L.Icon | null>(null)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+
 
   // ONLY RUN IN BROWSER
   useEffect(() => {
@@ -89,7 +91,7 @@ export default function ReportForm() {
       setPhoto(null)
       setError("")
       // add toast notification
-      toast.success("Report submitted successfully!")
+      setShowSuccessModal(true)
 
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message)
@@ -171,6 +173,41 @@ export default function ReportForm() {
             Submit Report
           </button>
         </form>
+        {showSuccessModal && (
+  <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center animate-in fade-in zoom-in">
+
+      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+        <svg
+          className="h-8 w-8 text-green-600"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <h3 className="text-2xl font-bold text-[#0d1224] mb-2">
+        Thank you for caring about your city 🌱
+      </h3>
+
+      <p className="text-gray-600 mb-6">
+        Your report has been successfully submitted.  
+        Our team will review it and take action as soon as possible.
+      </p>
+
+      <button
+        onClick={() => setShowSuccessModal(false)}
+        className="w-full bg-[#0d1224] text-white font-semibold py-3 rounded-lg hover:bg-blue-900 transition"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
       </div>
   )
 }
