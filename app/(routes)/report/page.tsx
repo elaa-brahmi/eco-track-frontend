@@ -24,7 +24,6 @@ export default function ReportForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
-  // ONLY RUN IN BROWSER
   useEffect(() => {
     setIsMounted(true)
 
@@ -51,7 +50,6 @@ export default function ReportForm() {
     })()
   }, [])
 
-  // GEOLOCATION
   useEffect(() => {
     if (!isMounted) return
 
@@ -102,7 +100,6 @@ export default function ReportForm() {
     }
   }
 
-  // PREVENT HYDRATION MISMATCH
   if (!isMounted) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
@@ -119,7 +116,6 @@ export default function ReportForm() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* DESCRIPTION */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">
               Description
@@ -135,7 +131,6 @@ export default function ReportForm() {
             />
           </div>
 
-          {/* PHOTO */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">
               Photo
@@ -150,7 +145,6 @@ export default function ReportForm() {
             />
           </div>
 
-          {/* LOCATION */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-3">
               Your Location
@@ -191,7 +185,6 @@ export default function ReportForm() {
             </p>
           )}
 
-          {/* SUBMIT BUTTON */}
           <button
             type="submit"
             disabled={
@@ -237,9 +230,8 @@ export default function ReportForm() {
         </form>
       </div>
 
-      {/* SUCCESS MODAL */}
       {showSuccessModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center animate-in fade-in zoom-in">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
               <svg
