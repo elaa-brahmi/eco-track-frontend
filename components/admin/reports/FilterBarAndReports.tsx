@@ -1,3 +1,4 @@
+"use client"
 import { useMemo, useState } from "react";
 import { ReportCard } from "./ReportCard";
 import { ReportData } from "@/types/reportType";
